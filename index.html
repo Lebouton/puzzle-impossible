@@ -35,6 +35,7 @@ nav.top{max-width:760px;margin:0 auto;padding:16px 14px 0;display:flex;align-ite
 #prog{flex-basis:100%;height:4px;border-radius:4px;background:var(--line);overflow:hidden}
 #prog i{display:block;height:100%;width:0;background:var(--accent)}
 @media (prefers-reduced-motion:no-preference){#prog i{transition:width .25s}}
+#global{margin:12px 0 0;font-size:.9rem;color:var(--mute)}
 #lang{margin-left:8px;min-height:36px;padding:4px 10px;font-size:.85rem;font-weight:600}
 @media (max-width:480px){#lang{margin-left:auto}}
 #faq{max-width:760px;margin:36px auto 0;padding:0 14px 24px;-webkit-user-select:text;user-select:text}
@@ -78,6 +79,7 @@ button:focus-visible{outline:3px solid #4a9be8;outline-offset:2px}
 <header>
   <h1 data-i18n="title">The Impossible Puzzle</h1>
   <p data-i18n="intro">One image: a blue sky. 96 pieces to put back. Take your time, nobody has finished it.</p>
+  <p id="global" hidden></p>
   <figure id="ref"><img id="refImg" alt="Preview of the puzzle image: a blue sky"><figcaption data-i18n="refcap">This is the image to rebuild.<br>Yes, that's all.</figcaption></figure>
   <div id="banner"></div>
 </header>
@@ -132,7 +134,7 @@ tp0:"Bravo, il en reste {0}.",tp1:"Une de plus. Plus que {0}. Facile.",tp2:"Le c
 stats:"Ton record : {0} · {1}",tries1:"{0} essai sur cet appareil",triesN:"{0} essais sur cet appareil",copied:"Texte et lien copiés. Colle-les où tu veux.",
 winShare:"J'ai réussi le puzzle de l'impossible en {0} ! Personne n'y arrive. Et toi ?",zeroShare:"Je n'ai trouvé aucune pièce du puzzle de l'impossible.",shareTxt:"En {0}, j'ai placé {1} sur {2}. C'est impossible !",
 banner:"Quelqu'un a placé {0} en {1}. Tu fais mieux ?",bannerWin:"Quelqu'un a terminé le puzzle en {0}. Tu en es capable ?",
-imgDone:"Terminé.",imgAll:"pièces. Toutes.",imgWin:"Impossible ? Pas pour moi.",imgOf1:"pièce sur {0}",imgOfN:"pièces sur {0}",imgIn:"En {0}.",imgImp:"C'est impossible.",imgFoot:"Tu fais mieux ? Essaie toi aussi",imgFootW:"Fais mieux si tu peux"
+global:"{0} essais déjà · Record du monde : {1} · Puzzles terminés : {2}",imgDone:"Terminé.",imgAll:"pièces. Toutes.",imgWin:"Impossible ? Pas pour moi.",imgOf1:"pièce sur {0}",imgOfN:"pièces sur {0}",imgIn:"En {0}.",imgImp:"C'est impossible.",imgFoot:"Tu fais mieux ? Essaie toi aussi",imgFootW:"Fais mieux si tu peux"
 },en:{
 title:"The Impossible Puzzle",navname:"Impossible Puzzle",tag:"One sky, zero hints",doctitle:"The Impossible Puzzle – a blue sky jigsaw nobody finishes | Nope Puzzle",
 intro:"One image: a blue sky. 96 pieces to put back. Take your time, nobody has finished it.",refcap:"This is the image to rebuild.<br>Yes, that's all.",refalt:"Preview of the puzzle image: a blue sky",
@@ -147,7 +149,7 @@ tp0:"Nice, {0} to go.",tp1:"One more. Only {0} left. Easy.",tp2:"The sky is watc
 stats:"Your record: {0} · {1}",tries1:"{0} try on this device",triesN:"{0} tries on this device",copied:"Text and link copied. Paste them anywhere.",
 winShare:"I finished the Impossible Puzzle in {0}! Nobody does. Can you?",zeroShare:"I couldn't place a single piece of the Impossible Puzzle.",shareTxt:"In {0}, I placed {1} out of {2}. It's impossible!",
 banner:"Someone placed {0} in {1}. Can you do better?",bannerWin:"Someone finished the puzzle in {0}. Can you?",
-imgDone:"Done.",imgAll:"pieces. All of them.",imgWin:"Impossible? Not for me.",imgOf1:"piece out of {0}",imgOfN:"pieces out of {0}",imgIn:"In {0}.",imgImp:"It's impossible.",imgFoot:"Think you can do better? Try it",imgFootW:"Beat that if you can"
+global:"{0} attempts so far · World record: {1} · Puzzles finished: {2}",imgDone:"Done.",imgAll:"pieces. All of them.",imgWin:"Impossible? Not for me.",imgOf1:"piece out of {0}",imgOfN:"pieces out of {0}",imgIn:"In {0}.",imgImp:"It's impossible.",imgFoot:"Think you can do better? Try it",imgFootW:"Beat that if you can"
 }};
 try{var q0=new URLSearchParams(location.search).get("lang"),sv=localStorage.getItem("pi-lang");LANG=q0||sv||((navigator.language||"en").slice(0,2)==="fr"?"fr":"en")}catch(_){}
 if(LANG!=="fr")LANG="en";
@@ -157,7 +159,7 @@ function applyLang(){
   document.querySelectorAll("[data-i18n]").forEach(function(el){el.innerHTML=T(el.getAttribute("data-i18n"))});
   document.getElementById("refImg").alt=T("refalt");
   board.setAttribute("data-zone",T("zone"));board.setAttribute("data-hint",T("hint"));
-  document.title=T("doctitle");document.getElementById("lang").textContent=LANG==="fr"?"EN":"FR";
+  document.title=T("doctitle");renderGlobal();document.getElementById("lang").textContent=LANG==="fr"?"EN":"FR";
 }
 document.getElementById("lang").onclick=function(){LANG=LANG==="fr"?"en":"fr";try{localStorage.setItem("pi-lang",LANG)}catch(_){}applyLang();upd()};
 var stage=document.getElementById('stage'),board=document.getElementById('board');
@@ -192,7 +194,7 @@ function seg(p,ax,ay,bx,by,s){
 
 function build(){
   stage.querySelectorAll('.pc').forEach(function(e){e.remove()});
-  pieces=[];placed=0;done=false;counted=false;t0=null;elapsed=0;clearInterval(timer);zTop=10;
+  pieces=[];placed=0;done=false;counted=false;sent=false;t0=null;elapsed=0;clearInterval(timer);zTop=10;
   var avail=Math.min(window.innerWidth-24,736);W=Math.floor(avail/COLS)*COLS;
   cw=W/COLS;ch=cw*.8;H=ch*ROWS;tab=cw*.25;tray=H*.95;
   stage.style.width=W+'px';stage.style.height=(H+tray+20)+'px';
@@ -229,7 +231,7 @@ function bind(o){
     if(o.ok||done)return;e.preventDefault();
     o.el.setPointerCapture(e.pointerId);sx=e.clientX;sy=e.clientY;ox=o.x;oy=o.y;
     o.el.classList.add('drag');o.el.style.zIndex=++zTop;
-    if(!t0){t0=Date.now();timer=setInterval(tick,1000)}
+    if(!t0){t0=Date.now();timer=setInterval(tick,1000);track({a:'start'})}
   });
   o.el.addEventListener('pointermove',function(e){
     if(!o.el.hasPointerCapture(e.pointerId))return;
@@ -246,6 +248,12 @@ function bind(o){
   o.el.addEventListener('pointerup',end);o.el.addEventListener('pointercancel',end);
 }
 var counted=false,toastT,mi=0;
+var sent=false,GL=null;
+function nf(n){try{return n.toLocaleString(LANG)}catch(_){return String(n)}}
+function renderGlobal(){var el=document.getElementById('global');if(!GL||GL.tries<1){el.hidden=true;return}el.textContent=T('global',nf(GL.tries),plural(GL.best),nf(GL.finished));el.hidden=false}
+function showGlobal(r){if(r&&typeof r.tries==='number'){GL=r;renderGlobal()}}
+function api(path,opt){try{fetch(path,opt).then(function(r){return r.ok?r.json():null}).then(showGlobal).catch(function(){})}catch(_){}}
+function track(o){api('/api/play',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)})}
 function toast(){
   var left=N-placed,m;
   if(placed===1)m=T('tFirst',left);else if(placed===10)m=T('tTen');else if(placed===N/2)m=T('tHalf');else if(left===10)m=T('tTenLeft');else if(left===1)m=T('tOne');else m=T('tp'+(mi++%5),left);
@@ -265,11 +273,11 @@ var shareUrl='',shareText='',shareBlob=null;
 function finish(win){
   if(t0){elapsed=Math.floor((Date.now()-t0)/1000)}
   clearInterval(timer);upd();
-  var p=placed,e=elapsed;saveStats(p);
+  var p=placed,e=elapsed;saveStats(p);if(!sent){sent=true;track({a:'end',p:p,t:e})}
   shareText=win?T('winShare',fmt(e)):
     (p===0?T('zeroShare'):T('shareTxt',fmt(e),plural(p),N));
   var base=SITE;
-  shareUrl=base+'?p='+p+'&t='+e;
+  shareUrl=base+'?p='+p+'&t='+e+'&l='+LANG;
   drawCard(win,p,e);buildLinks();done=true;
   document.getElementById('modal').classList.add('on');
   document.getElementById('share').focus();
@@ -351,6 +359,7 @@ try{
 
 var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(!t0&&!placed)build()},200)});
 applyLang();
+api("/api/stats");
 build();
 })();
 </script>
