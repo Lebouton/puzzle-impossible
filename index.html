@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Le puzzle de l'impossible</title>
+<meta property="og:title" content="Le puzzle de l'impossible">
+<meta property="og:description" content="Une seule image. Un ciel bleu. Combien de pièces trouveras-tu ?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f6fa;--ink:#0f1b2d;--mute:#586579;--line:#d5dce6;--card:#fff;--accent:#1c5bb0;--on:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c121b;--ink:#e8eef6;--mute:#93a1b4;--line:#243040;--card:#141d29;--accent:#7db4f2;--on:#08111c}}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-user-select:none;user-select:none}
+h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:clamp(2.1rem,7vw,3.5rem);line-height:1.04;margin:0;letter-spacing:-.025em}
+header{max-width:760px;margin:0 auto;padding:28px 14px 16px}
+header p{margin:8px 0 0;color:var(--mute);line-height:1.45;max-width:52ch}
+#ref{margin:18px 0 0;display:flex;align-items:center;gap:14px;padding:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;max-width:max-content}
+#ref img{width:120px;height:auto;border-radius:6px;border:1px solid var(--line);display:block;flex:none}
+#ref figcaption{color:var(--mute);font-size:.9rem;line-height:1.4}
+nav.top{max-width:760px;margin:0 auto;padding:16px 14px 0;display:flex;align-items:center;gap:10px;font-weight:600;font-size:.95rem}
+.logo{width:22px;height:22px;border-radius:6px;background:linear-gradient(#3f93e6,#8cc4f5);display:inline-block;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
+.top .tag{margin-left:auto;color:var(--mute);font-weight:500}
+@media (max-width:480px){.top .tag{display:none}}
+#prog{flex-basis:100%;height:4px;border-radius:4px;background:var(--line);overflow:hidden}
+#prog i{display:block;height:100%;width:0;background:var(--accent)}
+@media (prefers-reduced-motion:no-preference){#prog i{transition:width .25s}}
+footer{max-width:760px;margin:0 auto;padding:0 14px 28px;color:var(--mute);font-size:.85rem;text-align:center}
+#banner{display:none;margin:12px 0 0;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);font-size:.95rem}
+.bar{max-width:760px;margin:0 auto;padding:10px 14px 8px;flex-wrap:wrap;display:flex;gap:14px;align-items:center;justify-content:space-between;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5000}
+.stat{font-family:Fraunces,Georgia,serif;font-size:1.4rem;font-variant-numeric:tabular-nums}
+.stat small{font-family:system-ui,sans-serif;font-size:.8rem;color:var(--mute);margin-left:4px}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--accent);padding:10px 14px;background:transparent;color:var(--ink);min-height:44px}
+button.main{background:var(--accent);color:var(--on)}
+button:focus-visible{outline:3px solid #4a9be8;outline-offset:2px}
+#wrap{max-width:760px;margin:0 auto;padding:0 12px 40px}
+#stage{position:relative;margin:36px auto 0;touch-action:none;background:var(--card);border-radius:10px;box-shadow:0 0 0 1px var(--line),0 14px 34px -20px rgba(20,50,100,.45)}
+#board{position:absolute;left:0;top:0;border:2px dashed var(--accent);border-radius:4px;background:rgba(127,140,155,.12)}
+#board::before{content:"Zone d'assemblage";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Fraunces,Georgia,serif;font-weight:700;font-size:clamp(1.3rem,5vw,2.4rem);color:var(--mute);opacity:.55;pointer-events:none;text-align:center}
+#board::after{content:"Pose les pièces ici ↓";position:absolute;left:-2px;top:-30px;font-size:.9rem;font-weight:600;color:var(--ink);pointer-events:none}
+.pc{position:absolute;touch-action:none;cursor:grab;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.35))}
+.pc.lock{filter:none;cursor:default;pointer-events:none}
+.pc.drag{cursor:grabbing;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35))}
+#modal{position:fixed;inset:0;background:rgba(10,16,24,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:9000}
+#modal.on{display:flex}
+.card{background:var(--card);border-radius:12px;padding:20px;max-width:440px;width:100%;max-height:100%;overflow:auto}
+.card img{width:100%;border-radius:8px;display:block;margin-bottom:14px}
+.card .row{display:flex;flex-wrap:wrap;gap:8px}
+.card .row button{flex:1 1 auto}
+#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--accent);color:var(--on);padding:10px 16px;border-radius:999px;font-size:.95rem;text-align:center;max-width:90vw;opacity:0;pointer-events:none;z-index:8000}
+#toast.show{opacity:1}
+@media (prefers-reduced-motion:no-preference){#toast{transition:opacity .25s}}
+#stats{color:var(--mute);font-size:.9rem;margin:0 0 12px}
+#msg{min-height:1.2em;color:var(--mute);font-size:.9rem;margin:10px 0 0}
+@media (prefers-reduced-motion:no-preference){.pc.snap{transition:left .12s,top .12s}}
+</style>
+</head>
+<body>
+<nav class="top"><span class="logo"></span><span>Puzzle de l'impossible</span><span class="tag">Un ciel, zéro indice</span></nav>
+<header>
+  <h1>Le puzzle de l'impossible</h1>
+  <p>Une seule image : un ciel bleu. 96 pièces à replacer. Prends ton temps, personne n'y est arrivé.</p>
+  <figure id="ref"><img id="refImg" alt="Aperçu de l'image du puzzle : un ciel bleu"><figcaption>Voici l'image à reconstituer.<br>Oui, c'est tout.</figcaption></figure>
+  <div id="banner"></div>
+</header>
+<div class="bar">
+  <div class="stat"><span id="t">0 s</span><small>·</small><span id="n">0</span><small id="nl">/ 40 pièces</small></div>
+  <button class="main" id="stop">Partage ton score</button>
+  <div id="prog"><i id="progI"></i></div>
+</div>
+<div id="wrap"><div id="stage"><div id="board"></div></div></div>
+
+<footer>Le puzzle de l'impossible est un jeu gratuit, sans inscription.</footer>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="modal" role="dialog" aria-modal="true" aria-label="Ton résultat">
+  <div class="card">
+    <img id="shareImg" alt="Image de partage avec ton résultat">
+    <div class="row">
+      <button class="main" id="share">Partager</button>
+      <button id="copy">Copier le lien</button>
+      <button id="dl">Enregistrer l'image</button>
+    </div>
+    <p id="stats"></p>
+    <p id="msg"></p>
+    <div class="row" style="margin-top:6px"><button id="back">Reprendre le puzzle</button><button id="again">Recommencer</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+var COLS=12,ROWS=8,N=COLS*ROWS;
+var stage=document.getElementById('stage'),board=document.getElementById('board');
+var tEl=document.getElementById('t'),nEl=document.getElementById('n');
+var W,H,cw,ch,tab,tray,pieces=[],placed=0,t0=null,elapsed=0,timer=null,done=false,zTop=10,sky;
+
+function fmt(s){if(s<60)return s+' s';var m=Math.floor(s/60);if(m<60)return m+' min';return Math.floor(m/60)+' h '+String(m%60).padStart(2,'0')}
+function plural(n){return n+(n>1?' pièces':' pièce')}
+
+/* ---- le ciel ---- */
+function makeSky(){
+  var c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d');
+  var g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#3f93e6');g.addColorStop(1,'#7fbdf3');
+  x.fillStyle=g;x.fillRect(0,0,W,H);
+  /* grain quasi invisible */
+  for(var i=0;i<W*H/60;i++){x.fillStyle='rgba(255,255,255,'+(Math.random()*.035)+')';x.fillRect(Math.random()*W,Math.random()*H,1.5,1.5)}
+  /* un nuage minuscule, presque invisible */
+  x.fillStyle='rgba(255,255,255,.22)';
+  [[.72,.3,.05],[.76,.29,.04],[.69,.31,.035],[.74,.32,.045]].forEach(function(p){x.beginPath();x.ellipse(p[0]*W,p[1]*H,p[2]*W*1.4,p[2]*W*.6,0,0,7);x.fill()});
+  return c;
+}
+
+/* ---- forme de pièce ---- */
+function seg(p,ax,ay,bx,by,s){
+  var dx=bx-ax,dy=by-ay,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,nx=uy*s,ny=-ux*s;
+  function q(a,b){return [ax+ux*a*L+nx*b*L,ay+uy*a*L+ny*b*L]}
+  function B(a,b,c,d,e,f){var u=q(a,b),v=q(c,d),w=q(e,f);p.bezierCurveTo(u[0],u[1],v[0],v[1],w[0],w[1])}
+  if(!s){p.lineTo(bx,by);return}
+  var m=q(.35,0);p.lineTo(m[0],m[1]);
+  B(.35,.05,.30,.13,.38,.18);B(.44,.25,.56,.25,.62,.18);B(.70,.13,.65,.05,.65,0);p.lineTo(bx,by);
+}
+
+function build(){
+  stage.querySelectorAll('.pc').forEach(function(e){e.remove()});
+  pieces=[];placed=0;done=false;counted=false;t0=null;elapsed=0;clearInterval(timer);zTop=10;
+  var avail=Math.min(window.innerWidth-24,736);W=Math.floor(avail/COLS)*COLS;
+  cw=W/COLS;ch=cw*.8;H=ch*ROWS;tab=cw*.25;tray=H*.95;
+  stage.style.width=W+'px';stage.style.height=(H+tray+20)+'px';
+  board.style.width=W+'px';board.style.height=H+'px';
+  sky=makeSky();document.getElementById('refImg').src=sky.toDataURL('image/jpeg',.85);
+  var Hh=[],Vv=[],i,j;
+  for(j=0;j<=ROWS;j++){Hh[j]=[];for(i=0;i<COLS;i++)Hh[j][i]=(j==0||j==ROWS)?0:(Math.random()<.5?1:-1)}
+  for(j=0;j<ROWS;j++){Vv[j]=[];for(i=0;i<=COLS;i++)Vv[j][i]=(i==0||i==COLS)?0:(Math.random()<.5?1:-1)}
+  var pw=cw+2*tab,ph=ch+2*tab;
+  for(j=0;j<ROWS;j++)for(i=0;i<COLS;i++){
+    var c=document.createElement('canvas');c.width=pw;c.height=ph;c.className='pc';
+    var x=c.getContext('2d'),p=new Path2D();
+    p.moveTo(tab,tab);
+    seg(p,tab,tab,tab+cw,tab,-Hh[j][i]);
+    seg(p,tab+cw,tab,tab+cw,tab+ch,Vv[j][i+1]);
+    seg(p,tab+cw,tab+ch,tab,tab+ch,Hh[j+1][i]);
+    seg(p,tab,tab+ch,tab,tab,-Vv[j][i]);
+    p.closePath();
+    x.save();x.clip(p);x.drawImage(sky,i*cw-tab,j*ch-tab,pw,ph,0,0,pw,ph);x.restore();
+    x.strokeStyle='rgba(255,255,255,.28)';x.lineWidth=1;x.stroke(p);
+    var o={el:c,hx:i*cw-tab,hy:j*ch-tab,ok:false};
+    o.x=Math.random()*(W-pw+2*tab)-tab;o.y=H+10+Math.random()*(tray-ph+2*tab);
+    place(o);stage.appendChild(c);pieces.push(o);bind(o);
+  }
+  upd();
+}
+function place(o){o.el.style.left=o.x+'px';o.el.style.top=o.y+'px'}
+function upd(){document.getElementById('progI').style.width=(placed/N*100)+'%';nEl.textContent=placed;tEl.textContent=fmt(elapsed);document.getElementById('nl').textContent='/ '+N+' pièces'}
+
+/* ---- glisser-déposer ---- */
+function bind(o){
+  var sx,sy,ox,oy;
+  o.el.addEventListener('pointerdown',function(e){
+    if(o.ok||done)return;e.preventDefault();
+    o.el.setPointerCapture(e.pointerId);sx=e.clientX;sy=e.clientY;ox=o.x;oy=o.y;
+    o.el.classList.add('drag');o.el.style.zIndex=++zTop;
+    if(!t0){t0=Date.now();timer=setInterval(tick,1000)}
+  });
+  o.el.addEventListener('pointermove',function(e){
+    if(!o.el.hasPointerCapture(e.pointerId))return;
+    o.x=ox+e.clientX-sx;o.y=oy+e.clientY-sy;place(o);
+  });
+  function end(e){
+    if(!o.el.classList.contains('drag'))return;o.el.classList.remove('drag');
+    if(Math.hypot(o.x-o.hx,o.y-o.hy)<cw*.28){
+      o.x=o.hx;o.y=o.hy;o.ok=true;o.el.classList.add('lock','snap');o.el.style.zIndex=1;place(o);placed++;
+      if(navigator.vibrate)try{navigator.vibrate(15)}catch(_){}
+      upd();if(placed===N)finish(true);else toast();
+    }
+  }
+  o.el.addEventListener('pointerup',end);o.el.addEventListener('pointercancel',end);
+}
+var counted=false,toastT,mi=0;
+function toast(){
+  var left=N-placed,m;
+  var pool=['Bravo, il en reste '+left+'.','Une de plus. Plus que '+left+'. Facile.','Le ciel te regarde. Il en reste '+left+'.','Encore '+left+'. Respire.','Ça avance. Pas vite, mais ça avance. ('+left+' restantes)'];
+  if(placed===1)m='La première ! Il n\'en reste que '+left+'.';
+  else if(placed===10)m='Dix pièces. Tu es têtu(e), c\'est noté.';
+  else if(placed===N/2)m='La moitié. Le plus dur est fait. (Non.)';
+  else if(left===10)m='Plus que 10. Tu y crois vraiment ?';
+  else if(left===1)m='Une seule pièce. Ne la perds pas.';
+  else m=pool[mi++%pool.length];
+  var el=document.getElementById('toast');el.textContent=m;el.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(function(){el.classList.remove('show')},2200);
+}
+function saveStats(p){
+  var s={tries:0,best:0};
+  try{s=JSON.parse(localStorage.getItem('pi-stats'))||s}catch(_){}
+  if(!counted){counted=true;s.tries++;if(p>s.best)s.best=p;try{localStorage.setItem('pi-stats',JSON.stringify(s))}catch(_){}}
+  document.getElementById('stats').textContent='Ton record : '+plural(s.best)+' · '+s.tries+(s.tries>1?' essais':' essai')+' sur cet appareil';
+}
+function tick(){elapsed=Math.floor((Date.now()-t0)/1000);tEl.textContent=fmt(elapsed)}
+
+/* ---- résultat & partage ---- */
+var shareUrl='',shareText='',shareBlob=null;
+function finish(win){
+  if(t0){elapsed=Math.floor((Date.now()-t0)/1000)}
+  clearInterval(timer);upd();
+  var p=placed,e=elapsed;saveStats(p);
+  shareText=win?'J\'ai réussi le puzzle de l\'impossible en '+fmt(e)+' ! Personne n\'y arrive. Et toi ?':
+    (p===0?'Je n\'ai trouvé aucune pièce du puzzle de l\'impossible.':'En '+fmt(e)+', j\'ai placé '+plural(p)+' sur '+N+'. C\'est impossible !');
+  var base=location.href.split('?')[0].split('#')[0];
+  shareUrl=base+'?p='+p+'&t='+e;
+  drawShare(win,p,e);done=true;
+  document.getElementById('modal').classList.add('on');
+  document.getElementById('share').focus();
+}
+function wrap(x,text,cx,y,maxW,lh){
+  var words=text.split(' '),line='',lines=[];
+  words.forEach(function(w){var t=line?line+' '+w:w;if(x.measureText(t).width>maxW&&line){lines.push(line);line=w}else line=t});
+  lines.push(line);lines.forEach(function(l,i){x.fillText(l,cx,y+i*lh)});return y+lines.length*lh;
+}
+function drawWin(e){
+  var c=document.createElement('canvas');c.width=1080;c.height=1350;var x=c.getContext('2d');
+  var g=x.createLinearGradient(0,0,0,1350);g.addColorStop(0,'#14234d');g.addColorStop(.55,'#3b5fa8');g.addColorStop(1,'#f6b93b');
+  x.fillStyle=g;x.fillRect(0,0,1080,1350);
+  var cols=['#ffd56b','#ffffff','#7fd0ff','#ff8fa3','#b6f0a8'];
+  for(var i=0;i<140;i++){x.save();x.translate(Math.random()*1080,Math.random()*1350);x.rotate(Math.random()*6.3);x.fillStyle=cols[i%5];x.globalAlpha=.85;x.fillRect(-9,-4,18,8);x.restore()}
+  x.textAlign='center';x.fillStyle='#fff';
+  x.font='500 44px Fraunces,Georgia,serif';x.fillText('Le puzzle de l\'impossible',540,120);
+  x.fillStyle='#ffd56b';x.font='700 70px Fraunces,Georgia,serif';x.fillText('Terminé.',540,330);
+  x.fillStyle='#fff';x.font='700 340px Fraunces,Georgia,serif';x.fillText(String(N),540,640);
+  x.font='500 64px Fraunces,Georgia,serif';x.fillText('pièces. Toutes.',540,740);
+  x.font='700 100px Fraunces,Georgia,serif';
+  var y=wrap(x,'En '+fmt(e)+'.',540,920,900,110);
+  x.font='500 56px Fraunces,Georgia,serif';wrap(x,'Impossible ? Pas pour moi.',540,y+30,900,70);
+  x.font='500 40px system-ui,sans-serif';x.fillStyle='rgba(255,255,255,.92)';
+  x.fillText('Fais mieux si tu peux',540,1250);
+  document.getElementById('shareImg').src=c.toDataURL('image/png');
+  c.toBlob(function(b){shareBlob=b},'image/png');
+}
+function drawShare(win,p,e){
+  if(win){drawWin(e);return}
+  var c=document.createElement('canvas');c.width=1080;c.height=1350;var x=c.getContext('2d');
+  var g=x.createLinearGradient(0,0,0,1350);g.addColorStop(0,'#3f93e6');g.addColorStop(1,'#8cc4f5');
+  x.fillStyle=g;x.fillRect(0,0,1080,1350);
+  x.textAlign='center';x.fillStyle='#fff';
+  x.font='500 44px Fraunces,Georgia,serif';x.fillText('Le puzzle de l\'impossible',540,120);
+  x.font='700 300px Fraunces,Georgia,serif';x.fillText(win?'40':String(p),540,560);
+  x.font='500 60px Fraunces,Georgia,serif';x.fillText(win?'pièces sur 40':(p>1?'pièces':'pièce')+' sur '+N,540,650);
+  x.font='700 84px Fraunces,Georgia,serif';
+  var y=wrap(x,win?'Je l\'ai fait !':'En '+fmt(e)+'.',540,820,900,100);
+  x.font='700 110px Fraunces,Georgia,serif';
+  wrap(x,win?'Et toi ?':'C\'est impossible.',540,y+60,900,120);
+  x.font='500 40px system-ui,sans-serif';x.fillStyle='rgba(255,255,255,.9)';
+  x.fillText('Tu fais mieux ? Essaie toi aussi',540,1250);
+  document.getElementById('shareImg').src=c.toDataURL('image/png');
+  c.toBlob(function(b){shareBlob=b},'image/png');
+}
+function msg(t){document.getElementById('msg').textContent=t}
+document.getElementById('share').onclick=function(){
+  var data={title:'Le puzzle de l\'impossible',text:shareText,url:shareUrl};
+  try{
+    if(shareBlob&&navigator.canShare){var f=new File([shareBlob],'puzzle-impossible.png',{type:'image/png'});
+      if(navigator.canShare({files:[f]}))data.files=[f]}
+    if(navigator.share){navigator.share(data).catch(function(){});return}
+  }catch(_){}
+  copyLink();
+};
+function copyLink(){
+  var txt=shareText+' '+shareUrl;
+  function ok(){msg('Texte et lien copiés. Colle-les où tu veux.')}
+  function fb(){var a=document.createElement('textarea');a.value=txt;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(_){msg(txt)}a.remove()}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(ok,fb);else fb();
+}
+document.getElementById('copy').onclick=copyLink;
+document.getElementById('dl').onclick=function(){
+  var a=document.createElement('a');a.href=document.getElementById('shareImg').src;a.download='puzzle-impossible.png';
+  document.body.appendChild(a);a.click();a.remove();
+};
+document.getElementById('stop').onclick=function(){if(!done)finish(false);else document.getElementById('modal').classList.add('on')};
+document.getElementById('back').onclick=function(){
+  document.getElementById('modal').classList.remove('on');msg('');
+  if(placed<N){done=false;if(t0){t0=Date.now()-elapsed*1000;timer=setInterval(tick,1000)}}
+};
+document.getElementById('again').onclick=function(){document.getElementById('modal').classList.remove('on');msg('');build()};
+
+/* ---- bannière d'un ami ---- */
+try{
+  var q=new URLSearchParams(location.search),p=parseInt(q.get('p')),t=parseInt(q.get('t'));
+  if(!isNaN(p)&&!isNaN(t)&&p>=0&&p<=N){
+    var b=document.getElementById('banner');
+    b.textContent=p===N?'Quelqu\'un a terminé le puzzle en '+fmt(t)+'. Tu en es capable ?':'Quelqu\'un a placé '+plural(p)+' en '+fmt(t)+'. Tu fais mieux ?';b.style.display='block';
+  }
+}catch(_){}
+
+var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(!t0&&!placed)build()},200)});
+build();
+})();
+</script>
+</body>
+</html>
