@@ -49,6 +49,8 @@ button:focus-visible{outline:3px solid #4a9be8;outline-offset:2px}
 .card img{width:100%;border-radius:8px;display:block;margin-bottom:14px}
 .card .row{display:flex;flex-wrap:wrap;gap:8px}
 .card .row button{flex:1 1 auto}
+.card .row a{flex:1 1 auto;display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-height:44px;font-size:.9rem}
+.card .row a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 #toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--accent);color:var(--on);padding:10px 16px;border-radius:999px;font-size:.95rem;text-align:center;max-width:90vw;opacity:0;pointer-events:none;z-index:8000}
 #toast.show{opacity:1}
 @media (prefers-reduced-motion:no-preference){#toast{transition:opacity .25s}}
@@ -82,6 +84,7 @@ button:focus-visible{outline:3px solid #4a9be8;outline-offset:2px}
       <button id="copy">Copier le lien</button>
       <button id="dl">Enregistrer l'image</button>
     </div>
+    <div class="row" id="links" style="margin-top:8px"></div>
     <p id="stats"></p>
     <p id="msg"></p>
     <div class="row" style="margin-top:6px"><button id="back">Reprendre le puzzle</button><button id="again">Recommencer</button></div>
@@ -207,9 +210,16 @@ function finish(win){
     (p===0?'Je n\'ai trouvé aucune pièce du puzzle de l\'impossible.':'En '+fmt(e)+', j\'ai placé '+plural(p)+' sur '+N+'. C\'est impossible !');
   var base=location.href.split('?')[0].split('#')[0];
   shareUrl=base+'?p='+p+'&t='+e;
-  drawShare(win,p,e);done=true;
+  drawShare(win,p,e);buildLinks();done=true;
   document.getElementById('modal').classList.add('on');
   document.getElementById('share').focus();
+}
+function buildLinks(){
+  var u=encodeURIComponent(shareUrl),t=encodeURIComponent(shareText),both=encodeURIComponent(shareText+' '+shareUrl);
+  var L=[['WhatsApp','https://wa.me/?text='+both],['Telegram','https://t.me/share/url?url='+u+'&text='+t],['X','https://twitter.com/intent/tweet?text='+t+'&url='+u],['Facebook','https://www.facebook.com/sharer/sharer.php?u='+u],['E-mail','mailto:?subject='+encodeURIComponent('Le puzzle de l\'impossible')+'&body='+both]];
+  if(/Android|iPhone|iPad/i.test(navigator.userAgent))L.splice(1,0,['Messenger','fb-messenger://share?link='+u]);
+  var box=document.getElementById('links');box.textContent='';
+  L.forEach(function(x){var a=document.createElement('a');a.textContent=x[0];a.href=x[1];if(x[1].indexOf('http')===0){a.target='_blank';a.rel='noopener'}box.appendChild(a)});
 }
 function wrap(x,text,cx,y,maxW,lh){
   var words=text.split(' '),line='',lines=[];
