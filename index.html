@@ -3,13 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>The Impossible Puzzle – a blue sky jigsaw nobody finishes | Nope Puzzle</title>
-<meta name="description" content="Free online jigsaw with one image: a plain blue sky. 96 pieces, zero hints. How many can you place? Le puzzle de l'impossible : un ciel bleu, 96 pièces, zéro indice.">
+<title>Impossible Puzzle Online: a blue sky jigsaw nobody finishes | Nope Puzzle</title>
+<meta name="description" content="Free impossible puzzle online: one plain blue sky, 96 pieces, zero hints. How many can you place? Share your score and challenge a friend.">
 <link rel="canonical" href="https://nopepuzzle.com/">
+<link rel="alternate" hreflang="en" href="https://nopepuzzle.com/">
+<link rel="alternate" hreflang="fr" href="https://nopepuzzle.com/fr/">
+<link rel="alternate" hreflang="x-default" href="https://nopepuzzle.com/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%A9%3C/text%3E%3C/svg%3E">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"The Impossible Puzzle","alternateName":["Nope Puzzle","Le puzzle de l'impossible"],"url":"https://nopepuzzle.com/","description":"A free online jigsaw puzzle with a single, almost uniform blue sky image. 96 pieces, no hints.","genre":"Puzzle","applicationCategory":"Game","operatingSystem":"Any (web browser)","inLanguage":["en","fr"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
 <meta property="og:title" content="The Impossible Puzzle">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="fr_FR">
 <meta property="og:url" content="https://nopepuzzle.com/">
 <meta property="og:image" content="https://nopepuzzle.com/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -78,13 +83,13 @@ button:focus-visible{outline:3px solid #4a9be8;outline-offset:2px}
 <nav class="top"><span class="logo"></span><span data-i18n="navname">Impossible Puzzle</span><span class="tag" data-i18n="tag">One sky, zero hints</span><button id="lang" aria-label="Language / Langue">FR</button></nav>
 <header>
   <h1 data-i18n="title">The Impossible Puzzle</h1>
-  <p data-i18n="intro">One image: a blue sky. 96 pieces to put back. Take your time, nobody has finished it.</p>
+  <p data-i18n="intro">An impossible puzzle online: one image, a blue sky, 96 pieces to put back. Free, no sign-up. Nobody has finished it.</p>
   <p id="global" hidden></p>
   <figure id="ref"><img id="refImg" alt="Preview of the puzzle image: a blue sky"><figcaption data-i18n="refcap">This is the image to rebuild.<br>Yes, that's all.</figcaption></figure>
   <div id="banner"></div>
 </header>
 <div class="bar">
-  <div class="stat"><span id="t">0 s</span><small>·</small><span id="n">0</span><small id="nl">/ 40 pièces</small></div>
+  <div class="stat"><span id="t">0 s</span><small>·</small><span id="n">0</span><small id="nl">/ 96 pièces</small></div>
   <button class="main" id="stop" data-i18n="stop">Share your score</button>
   <div id="prog"><i id="progI"></i></div>
 </div>
@@ -92,12 +97,16 @@ button:focus-visible{outline:3px solid #4a9be8;outline-offset:2px}
 
 <section id="faq">
   <h2 data-i18n="faqh">Frequently asked questions</h2>
-  <h3 data-i18n="q1">Is the puzzle really impossible?</h3>
+  <h3 data-i18n="q1">Is the impossible puzzle really impossible?</h3>
   <p data-i18n="a1">Not technically: every piece has exactly one place. But the sky is almost uniform, so there are almost no visual clues. Only the shape of the pieces can help you.</p>
   <h3 data-i18n="q2">How does the score work?</h3>
   <p data-i18n="a2">The timer starts when you touch your first piece. When you want to stop, click "Share your score" to get an image to send to your friends.</p>
   <h3 data-i18n="q3">Is it free?</h3>
   <p data-i18n="a3">Yes. Free, no sign-up, directly in your browser, on computer or phone.</p>
+  <h3 data-i18n="q4">What is a monochrome puzzle?</h3>
+  <p data-i18n="a4">A monochrome puzzle is a jigsaw whose image is a single colour, or nearly. With no pattern to recognise, you can only rely on the shape of the pieces. The Impossible Puzzle is an online version: a plain blue sky.</p>
+  <h3 data-i18n="q5">How do you solve a hard puzzle like this?</h3>
+  <p data-i18n="a5">You have one clue: the shape of the pieces. Study the edges and the notches, join pieces in pairs, then bring the small groups together. There is no trick, which is what makes it so hard for adults and kids alike.</p>
 </section>
 <footer data-i18n="footer">The Impossible Puzzle is a free game, no sign-up.</footer>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -121,13 +130,13 @@ button:focus-visible{outline:3px solid #4a9be8;outline-offset:2px}
 var COLS=12,ROWS=8,N=COLS*ROWS;
 var SITE="https://nopepuzzle.com/",LANG="en";
 var D={fr:{
-title:"Le puzzle de l'impossible",navname:"Puzzle de l'impossible",tag:"Un ciel, zéro indice",doctitle:"Le puzzle de l'impossible – un ciel bleu que personne ne finit | Nope Puzzle",
-intro:"Une seule image : un ciel bleu. 96 pièces à replacer. Prends ton temps, personne n'y est arrivé.",refcap:"Voici l'image à reconstituer.<br>Oui, c'est tout.",refalt:"Aperçu de l'image du puzzle : un ciel bleu",
+title:"Le puzzle de l'impossible",navname:"Puzzle de l'impossible",tag:"Un ciel, zéro indice",doctitle:"Puzzle impossible en ligne : un ciel bleu que personne ne finit | Nope Puzzle",
+intro:"Un puzzle impossible en ligne : une seule image, un ciel bleu, 96 pièces à replacer. Gratuit, sans inscription. Personne n'y est arrivé.",refcap:"Voici l'image à reconstituer.<br>Oui, c'est tout.",refalt:"Aperçu de l'image du puzzle : un ciel bleu",
 stop:"Partage ton score",share:"Partager",copy:"Copier le lien",dl:"Enregistrer l'image",back:"Reprendre le puzzle",again:"Recommencer",
 zone:"Zone d'assemblage",hint:"Pose les pièces ici ↓",footer:"Le puzzle de l'impossible est un jeu gratuit, sans inscription.",
-faqh:"Questions fréquentes",q1:"Le puzzle est-il vraiment impossible ?",a1:"Pas techniquement : chaque pièce a une seule place possible. Mais le ciel est presque uniforme, donc il n'y a presque aucun repère. Seule la forme des pièces peut t'aider.",
+faqh:"Questions fréquentes",q1:"Le puzzle impossible est-il vraiment impossible ?",a1:"Pas techniquement : chaque pièce a une seule place possible. Mais le ciel est presque uniforme, donc il n'y a presque aucun repère. Seule la forme des pièces peut t'aider.",
 q2:"Comment marche le score ?",a2:"Le chrono démarre à ta première pièce. Quand tu veux arrêter, clique sur « Partage ton score » pour obtenir une image à envoyer à tes amis.",
-q3:"Est-ce gratuit ?",a3:"Oui. Gratuit, sans inscription, directement dans le navigateur, sur ordinateur comme sur téléphone.",
+q3:"Est-ce gratuit ?",a3:"Oui. Gratuit, sans inscription, directement dans le navigateur, sur ordinateur comme sur téléphone.",q4:"Qu'est-ce qu'un puzzle monochrome ?",a4:"C'est un puzzle dont l'image est d'une seule couleur, ou presque. Sans motif à reconnaître, on ne peut se fier qu'à la forme des pièces. Le puzzle de l'impossible en est une version en ligne : un ciel bleu uni.",q5:"Comment réussir un puzzle difficile ?",a5:"Ici, un seul repère : la forme des pièces. Observe les bords et les encoches, assemble les pièces par paires, puis rapproche les petits groupes. Il n'y a pas de truc, et c'est ce qui rend ce puzzle si difficile pour les adultes comme pour les enfants.",
 of:"/ {0} pièces",piece1:"{0} pièce",pieceN:"{0} pièces",
 tFirst:"La première ! Il n'en reste que {0}.",tTen:"Dix pièces. Tu es têtu(e), c'est noté.",tHalf:"La moitié. Le plus dur est fait. (Non.)",tTenLeft:"Plus que 10. Tu y crois vraiment ?",tOne:"Une seule pièce. Ne la perds pas.",
 tp0:"Bravo, il en reste {0}.",tp1:"Une de plus. Plus que {0}. Facile.",tp2:"Le ciel te regarde. Il en reste {0}.",tp3:"Encore {0}. Respire.",tp4:"Ça avance. Pas vite, mais ça avance. ({0} restantes)",
@@ -136,13 +145,13 @@ winShare:"J'ai réussi le puzzle de l'impossible en {0} ! Personne n'y arrive. E
 banner:"Quelqu'un a placé {0} en {1}. Tu fais mieux ?",bannerWin:"Quelqu'un a terminé le puzzle en {0}. Tu en es capable ?",
 global:"{0} essais déjà · Record du monde : {1} · Puzzles terminés : {2}",imgDone:"Terminé.",imgAll:"pièces. Toutes.",imgWin:"Impossible ? Pas pour moi.",imgOf1:"pièce sur {0}",imgOfN:"pièces sur {0}",imgIn:"En {0}.",imgImp:"C'est impossible.",imgFoot:"Tu fais mieux ? Essaie toi aussi",imgFootW:"Fais mieux si tu peux"
 },en:{
-title:"The Impossible Puzzle",navname:"Impossible Puzzle",tag:"One sky, zero hints",doctitle:"The Impossible Puzzle – a blue sky jigsaw nobody finishes | Nope Puzzle",
-intro:"One image: a blue sky. 96 pieces to put back. Take your time, nobody has finished it.",refcap:"This is the image to rebuild.<br>Yes, that's all.",refalt:"Preview of the puzzle image: a blue sky",
+title:"The Impossible Puzzle",navname:"Impossible Puzzle",tag:"One sky, zero hints",doctitle:"Impossible Puzzle Online: a blue sky jigsaw nobody finishes | Nope Puzzle",
+intro:"An impossible puzzle online: one image, a blue sky, 96 pieces to put back. Free, no sign-up. Nobody has finished it.",refcap:"This is the image to rebuild.<br>Yes, that's all.",refalt:"Preview of the puzzle image: a blue sky",
 stop:"Share your score",share:"Share",copy:"Copy link",dl:"Save image",back:"Keep playing",again:"Start over",
 zone:"Assembly zone",hint:"Drop the pieces here ↓",footer:"The Impossible Puzzle is a free game, no sign-up.",
-faqh:"Frequently asked questions",q1:"Is the puzzle really impossible?",a1:"Not technically: every piece has exactly one place. But the sky is almost uniform, so there are almost no visual clues. Only the shape of the pieces can help you.",
+faqh:"Frequently asked questions",q1:"Is the impossible puzzle really impossible?",a1:"Not technically: every piece has exactly one place. But the sky is almost uniform, so there are almost no visual clues. Only the shape of the pieces can help you.",
 q2:"How does the score work?",a2:"The timer starts when you touch your first piece. When you want to stop, click \"Share your score\" to get an image to send to your friends.",
-q3:"Is it free?",a3:"Yes. Free, no sign-up, directly in your browser, on computer or phone.",
+q3:"Is it free?",a3:"Yes. Free, no sign-up, directly in your browser, on computer or phone.",q4:"What is a monochrome puzzle?",a4:"A monochrome puzzle is a jigsaw whose image is a single colour, or nearly. With no pattern to recognise, you can only rely on the shape of the pieces. The Impossible Puzzle is an online version: a plain blue sky.",q5:"How do you solve a hard puzzle like this?",a5:"You have one clue: the shape of the pieces. Study the edges and the notches, join pieces in pairs, then bring the small groups together. There is no trick, which is what makes it so hard for adults and kids alike.",
 of:"/ {0} pieces",piece1:"{0} piece",pieceN:"{0} pieces",
 tFirst:"The first one! Only {0} left.",tTen:"Ten pieces. You're stubborn, noted.",tHalf:"Halfway. The hard part is done. (It isn't.)",tTenLeft:"Only 10 left. Do you really believe it?",tOne:"One piece left. Don't lose it.",
 tp0:"Nice, {0} to go.",tp1:"One more. Only {0} left. Easy.",tp2:"The sky is watching. {0} left.",tp3:"{0} more. Breathe.",tp4:"Progress. Slow, but progress. ({0} left)",
@@ -151,8 +160,8 @@ winShare:"I finished the Impossible Puzzle in {0}! Nobody does. Can you?",zeroSh
 banner:"Someone placed {0} in {1}. Can you do better?",bannerWin:"Someone finished the puzzle in {0}. Can you?",
 global:"{0} attempts so far · World record: {1} · Puzzles finished: {2}",imgDone:"Done.",imgAll:"pieces. All of them.",imgWin:"Impossible? Not for me.",imgOf1:"piece out of {0}",imgOfN:"pieces out of {0}",imgIn:"In {0}.",imgImp:"It's impossible.",imgFoot:"Think you can do better? Try it",imgFootW:"Beat that if you can"
 }};
-try{var q0=new URLSearchParams(location.search).get("lang"),sv=localStorage.getItem("pi-lang");LANG=q0||sv||((navigator.language||"en").slice(0,2)==="fr"?"fr":"en")}catch(_){}
-if(LANG!=="fr")LANG="en";
+LANG=document.documentElement.lang==="fr"?"fr":"en";
+try{if(LANG==="en"&&!/[?&]lang=en/.test(location.search)&&!localStorage.getItem("pi-lang")&&(navigator.language||"").slice(0,2)==="fr")location.replace("/fr/"+location.search+location.hash)}catch(_){}
 function T(k){var v=D[LANG][k]!==undefined?D[LANG][k]:D.en[k];for(var i=1;i<arguments.length;i++)v=v.replace("{"+(i-1)+"}",arguments[i]);return v}
 function applyLang(){
   document.documentElement.lang=LANG;
@@ -161,7 +170,7 @@ function applyLang(){
   board.setAttribute("data-zone",T("zone"));board.setAttribute("data-hint",T("hint"));
   document.title=T("doctitle");renderGlobal();document.getElementById("lang").textContent=LANG==="fr"?"EN":"FR";
 }
-document.getElementById("lang").onclick=function(){LANG=LANG==="fr"?"en":"fr";try{localStorage.setItem("pi-lang",LANG)}catch(_){}applyLang();upd()};
+document.getElementById("lang").onclick=function(){var to=LANG==="fr"?"en":"fr";try{localStorage.setItem("pi-lang",to)}catch(_){}location.href=(to==="fr"?"/fr/":"/")+location.search};
 var stage=document.getElementById('stage'),board=document.getElementById('board');
 var tEl=document.getElementById('t'),nEl=document.getElementById('n');
 var W,H,cw,ch,tab,tray,pieces=[],placed=0,t0=null,elapsed=0,timer=null,done=false,zTop=10,sky;
@@ -276,7 +285,7 @@ function finish(win){
   var p=placed,e=elapsed;saveStats(p);if(!sent){sent=true;track({a:'end',p:p,t:e})}
   shareText=win?T('winShare',fmt(e)):
     (p===0?T('zeroShare'):T('shareTxt',fmt(e),plural(p),N));
-  var base=SITE;
+  var base=SITE+(LANG==='fr'?'fr/':'');
   shareUrl=base+'?p='+p+'&t='+e+'&l='+LANG;
   drawCard(win,p,e);buildLinks();done=true;
   document.getElementById('modal').classList.add('on');
