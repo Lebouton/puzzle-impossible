@@ -82,6 +82,15 @@ h1{font-weight:800;font-size:clamp(1.8rem,6vw,2.8rem);line-height:1;margin:0;let
 #msg{min-height:1.2em;color:var(--mute);font-size:.9rem;margin:0 0 8px}
 
 header.top nav a{padding:8px 12px}
+.brand{white-space:nowrap}
+@media (max-width:480px){header.top{gap:8px;padding:12px}.brand{font-size:.88rem;letter-spacing:.02em}.brand svg{width:22px;height:22px}header.top nav{gap:6px}header.top nav a{padding:6px 10px;font-size:.85rem}#lang{padding:6px 10px}}
+.ref{position:relative;padding:0;border:0;background:none;min-height:0;border-radius:10px;cursor:zoom-in;line-height:0}
+#refImg{width:120px;height:auto;border-radius:10px;border:1.5px solid var(--line);display:block}
+.ref::after{content:"⤢";position:absolute;right:6px;bottom:6px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:14px;line-height:22px;text-align:center}
+#lightbox{position:fixed;inset:0;background:rgba(3,10,25,.86);display:none;align-items:center;justify-content:center;padding:16px;z-index:9500;cursor:zoom-out}
+#lightbox.on{display:flex}
+#lightbox img{max-width:96vw;max-height:86vh;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+@media (max-width:480px){#refImg{width:84px}}
 .card .other{display:block;margin:12px 0 2px;text-align:center;color:var(--accent);font-weight:700;text-decoration:none;padding:8px}
 body.leaves{--bg:#1c0f08;--panel:#2b1709;--panel2:#3d2210;--accent:#ffb23d;--line:rgba(255,230,200,.16);--mute:#d9bd9d;background:radial-gradient(1100px 560px at 85% -10%,#7d3b10 0,transparent 62%),var(--bg)}
 </style>
@@ -96,7 +105,7 @@ body.leaves{--bg:#1c0f08;--panel:#2b1709;--panel2:#3d2210;--accent:#ffb23d;--lin
   <p id="global" hidden></p>
 </section>
 <div class="bar">
-  <img id="refImg" src="/sky.jpg" alt="" width="60" height="33">
+  <button class="ref" id="refBtn" type="button"><img id="refImg" src="/sky.jpg" alt="" width="120" height="66"></button>
   <div class="stat"><span id="t">0 s</span><small>·</small><span id="n">0</span><small id="nl"></small></div>
   <button class="main" id="stop" data-i18n="stop">Partage ton score</button>
   <div id="prog"><i id="progI"></i></div>
@@ -108,6 +117,7 @@ body.leaves{--bg:#1c0f08;--panel:#2b1709;--panel2:#3d2210;--accent:#ffb23d;--lin
   <p><a href="/fr/faq/" data-i18n="faqlink">Questions et réponses sur le puzzle →</a></p>
 </footer>
 <div id="toast" role="status" aria-live="polite"></div>
+<div id="lightbox" role="dialog" aria-modal="true"><img id="bigImg" alt=""></div>
 <div id="modal" role="dialog" aria-modal="true">
   <div class="card">
     <img id="shareImg" alt="">
@@ -129,7 +139,7 @@ body.leaves{--bg:#1c0f08;--panel:#2b1709;--panel2:#3d2210;--accent:#ffb23d;--lin
 var PZ=window.PZ,COLS=PZ.cols,ROWS=PZ.rows,N=COLS*ROWS,SK=PZ.id==='sky'?'pi-stats':'pi-stats-'+PZ.id;
 var SITE="https://nopepuzzle.com/",LANG="en";
 var D={fr:{
-title:"Le puzzle de l'impossible",navname:"Puzzle de l'impossible",tag:"Un ciel, zéro indice",sub:"96 pièces. Un ciel. Zéro indice.",faqnav:"FAQ",faqlink:"Questions et réponses sur le puzzle →",doctitle:"Puzzle impossible en ligne : un ciel bleu que personne ne finit | Nope Puzzle",
+title:"Le puzzle de l'impossible",navname:"Puzzle de l'impossible",tag:"Un ciel, zéro indice",viewmodel:"Voir le modèle",sub:"96 pièces. Un ciel. Zéro indice.",faqnav:"FAQ",faqlink:"Questions et réponses sur le puzzle →",doctitle:"Puzzle impossible en ligne : un ciel bleu que personne ne finit | Nope Puzzle",
 intro:"Un puzzle impossible en ligne : une seule image, un ciel bleu, 96 pièces à replacer. Gratuit, sans inscription. Personne n'y est arrivé.",refcap:"Voici l'image à reconstituer.<br>Oui, c'est tout.",refalt:"Aperçu de l'image du puzzle : un ciel bleu",
 stop:"Partage ton score",share:"Partager",copy:"Copier le lien",dl:"Enregistrer l'image",back:"Reprendre le puzzle",again:"Recommencer",
 zone:"Zone d'assemblage",hint:"Pose les pièces ici ↓",footer:"Le puzzle de l'impossible est un jeu gratuit, sans inscription.",
@@ -144,7 +154,7 @@ winShare:"J'ai réussi le puzzle de l'impossible en {0} ! Personne n'y arrive. E
 banner:"Quelqu'un a placé {0} en {1}. Tu fais mieux ?",bannerWin:"Quelqu'un a terminé le puzzle en {0}. Tu en es capable ?",
 global:"{0} essais déjà · Record du monde : {1} · Puzzles terminés : {2}",imgDone:"Terminé.",imgAll:"pièces. Toutes.",imgWin:"Impossible ? Pas pour moi.",imgOf1:"pièce sur {0}",imgOfN:"pièces sur {0}",imgIn:"En {0}.",imgImp:"C'est impossible.",imgFoot:"Tu fais mieux ? Essaie toi aussi",imgFootW:"Fais mieux si tu peux"
 },en:{
-title:"The Impossible Puzzle",navname:"Impossible Puzzle",tag:"One sky, zero hints",sub:"96 pieces. One sky. Zero hints.",faqnav:"FAQ",faqlink:"Questions and answers about the puzzle →",doctitle:"Impossible Puzzle Online: Free Blue Sky Jigsaw | Nope Puzzle",
+title:"The Impossible Puzzle",navname:"Impossible Puzzle",tag:"One sky, zero hints",viewmodel:"View the picture",sub:"96 pieces. One sky. Zero hints.",faqnav:"FAQ",faqlink:"Questions and answers about the puzzle →",doctitle:"Impossible Puzzle Online: Free Blue Sky Jigsaw | Nope Puzzle",
 intro:"An impossible puzzle online: one image, a blue sky, 96 pieces to put back. Free, no sign-up. Nobody has finished it.",refcap:"This is the image to rebuild.<br>Yes, that's all.",refalt:"Preview of the puzzle image: a blue sky",
 stop:"Share your score",share:"Share",copy:"Copy link",dl:"Save image",back:"Keep playing",again:"Start over",
 zone:"Assembly zone",hint:"Drop the pieces here ↓",footer:"The Impossible Puzzle is a free game, no sign-up.",
@@ -166,7 +176,7 @@ function T(k){var v=D[LANG][k]!==undefined?D[LANG][k]:D.en[k];for(var i=1;i<argu
 function applyLang(){
   document.documentElement.lang=LANG;
   document.querySelectorAll("[data-i18n]").forEach(function(el){el.innerHTML=T(el.getAttribute("data-i18n"))});
-  document.getElementById("refImg").alt=T("refalt");
+  document.getElementById("refImg").alt=T("refalt");document.getElementById("bigImg").alt=T("refalt");document.getElementById("refBtn").setAttribute("aria-label",T("viewmodel"));document.getElementById("refBtn").title=T("viewmodel");
   board.setAttribute("data-zone",T("zone"));board.setAttribute("data-hint",T("hint"));
   document.title=T("doctitle");renderGlobal();document.getElementById("lang").textContent=LANG==="fr"?"EN":"FR";
 }
@@ -198,8 +208,8 @@ function seg(p,ax,ay,bx,by,s){
 function build(){if(!IMG||!IMG.naturalWidth)return;
   stage.querySelectorAll('.pc').forEach(function(e){e.remove()});
   pieces=[];placed=0;done=false;counted=false;sent=false;t0=null;elapsed=0;clearInterval(timer);zTop=10;
-  var avail=Math.min(window.innerWidth-20,920,Math.max(340,(window.innerHeight-300)/.86));W=Math.floor(avail/COLS)*COLS;
-  cw=W/COLS;ch=cw*.8;H=ch*ROWS;tab=cw*.25;tray=Math.max(H*.6,Math.min(H*1.1,window.innerHeight-290-H-30));
+  var avail=Math.min(window.innerWidth-20,920,Math.max(340,(window.innerHeight-320)/.86));W=Math.floor(avail/COLS)*COLS;
+  cw=W/COLS;ch=cw*.8;H=ch*ROWS;tab=cw*.25;tray=Math.max(H*.6,Math.min(H*1.1,window.innerHeight-310-H-30));
   stage.style.width=W+'px';stage.style.height=(H+tray+20)+'px';
   board.style.width=W+'px';board.style.height=H+'px';
   sky=makeSky();
@@ -362,6 +372,10 @@ try{
 }catch(_){}
 
 var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(!t0&&!placed)build()},200)});
+var lb=document.getElementById("lightbox");
+document.getElementById("refBtn").onclick=function(){document.getElementById("bigImg").src=PZ.img;lb.classList.add("on")};
+lb.onclick=function(){lb.classList.remove("on")};
+document.addEventListener("keydown",function(e){if(e.key==="Escape")lb.classList.remove("on")});
 applyLang();
 api("/api/stats?z="+PZ.id);
 IMG=new Image();IMG.onload=build;IMG.src=PZ.img;
