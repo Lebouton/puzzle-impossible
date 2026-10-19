@@ -80,10 +80,14 @@ h1{font-weight:800;font-size:clamp(1.8rem,6vw,2.8rem);line-height:1;margin:0;let
 .card .row a{flex:1 1 auto;display:flex;align-items:center;justify-content:center;text-decoration:none;color:var(--ink);border:1.5px solid var(--line);border-radius:999px;padding:10px 14px;min-height:44px;font-size:.9rem;font-weight:600}
 #stats{color:var(--mute);font-size:.9rem;margin:12px 0 4px}
 #msg{min-height:1.2em;color:var(--mute);font-size:.9rem;margin:0 0 8px}
+
+header.top nav a{padding:8px 12px}
+.card .other{display:block;margin:12px 0 2px;text-align:center;color:var(--accent);font-weight:700;text-decoration:none;padding:8px}
+body.leaves{--bg:#1c0f08;--panel:#2b1709;--panel2:#3d2210;--accent:#ffb23d;--line:rgba(255,230,200,.16);--mute:#d9bd9d;background:radial-gradient(1100px 560px at 85% -10%,#7d3b10 0,transparent 62%),var(--bg)}
 </style>
 </head>
 <body>
-<header class="top"><a class="brand" href="/fr/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6a2 2 0 1 1 4 0h6v6a2 2 0 1 0 0 4v6h-6a2 2 0 1 0-4 0H4v-6a2 2 0 1 1 0-4z"/></svg>NOPE PUZZLE</a><nav><a href="/fr/faq/" data-i18n="faqnav">FAQ</a><button id="lang" aria-label="Language / Langue">EN</button></nav></header>
+<header class="top"><a class="brand" href="/fr/"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6a2 2 0 1 1 4 0h6v6a2 2 0 1 0 0 4v6h-6a2 2 0 1 0-4 0H4v-6a2 2 0 1 1 0-4z"/></svg>NOPE PUZZLE</a><nav><a href="/fr/puzzles/">Puzzles</a><a href="/fr/faq/">FAQ</a><button id="lang" aria-label="Language / Langue">EN</button></nav></header>
 <main>
 <section class="hero">
   <h1 data-i18n="title">Le puzzle de l'impossible</h1>
@@ -116,11 +120,13 @@ h1{font-weight:800;font-size:clamp(1.8rem,6vw,2.8rem);line-height:1;margin:0;let
     <p id="stats"></p>
     <p id="msg"></p>
     <div class="row"><button id="back" data-i18n="back">Reprendre le puzzle</button><button id="again" data-i18n="again">Recommencer</button></div>
+    <a class="other" id="other" href="#"></a>
   </div>
 </div>
+<script>window.PZ={"id": "sky", "cols": 12, "rows": 8, "img": "/sky.jpg", "path": "", "c0": "#0050a0", "c1": "#3a85d0", "w0": "#14234d", "w1": "#3b5fa8", "other": {"fr": "/fr/puzzles/leaves/", "en": "/puzzles/leaves/"}, "t": {"fr": {"also": "Essaie aussi : Feuilles d'automne →"}, "en": {"also": "Try also: Autumn Leaves →"}}};</script>
 <script>
 (function(){
-var COLS=12,ROWS=8,N=COLS*ROWS;
+var PZ=window.PZ,COLS=PZ.cols,ROWS=PZ.rows,N=COLS*ROWS,SK=PZ.id==='sky'?'pi-stats':'pi-stats-'+PZ.id;
 var SITE="https://nopepuzzle.com/",LANG="en";
 var D={fr:{
 title:"Le puzzle de l'impossible",navname:"Puzzle de l'impossible",tag:"Un ciel, zéro indice",sub:"96 pièces. Un ciel. Zéro indice.",faqnav:"FAQ",faqlink:"Questions et réponses sur le puzzle →",doctitle:"Puzzle impossible en ligne : un ciel bleu que personne ne finit | Nope Puzzle",
@@ -153,8 +159,9 @@ winShare:"I finished the Impossible Puzzle in {0}! Nobody does. Can you?",zeroSh
 banner:"Someone placed {0} in {1}. Can you do better?",bannerWin:"Someone finished the puzzle in {0}. Can you?",
 global:"{0} attempts so far · World record: {1} · Puzzles finished: {2}",imgDone:"Done.",imgAll:"pieces. All of them.",imgWin:"Impossible? Not for me.",imgOf1:"piece out of {0}",imgOfN:"pieces out of {0}",imgIn:"In {0}.",imgImp:"It's impossible.",imgFoot:"Think you can do better? Try it",imgFootW:"Beat that if you can"
 }};
+for(var _l in PZ.t)for(var _k in PZ.t[_l])D[_l][_k]=PZ.t[_l][_k];
 LANG=document.documentElement.lang==="fr"?"fr":"en";
-try{if(LANG==="en"&&!/[?&]lang=en/.test(location.search)&&!localStorage.getItem("pi-lang")&&(navigator.language||"").slice(0,2)==="fr")location.replace("/fr/"+location.search+location.hash)}catch(_){}
+try{if(LANG==="en"&&!/[?&]lang=en/.test(location.search)&&!localStorage.getItem("pi-lang")&&(navigator.language||"").slice(0,2)==="fr")location.replace("/fr/"+PZ.path+location.search+location.hash)}catch(_){}
 function T(k){var v=D[LANG][k]!==undefined?D[LANG][k]:D.en[k];for(var i=1;i<arguments.length;i++)v=v.replace("{"+(i-1)+"}",arguments[i]);return v}
 function applyLang(){
   document.documentElement.lang=LANG;
@@ -163,7 +170,7 @@ function applyLang(){
   board.setAttribute("data-zone",T("zone"));board.setAttribute("data-hint",T("hint"));
   document.title=T("doctitle");renderGlobal();document.getElementById("lang").textContent=LANG==="fr"?"EN":"FR";
 }
-document.getElementById("lang").onclick=function(){var to=LANG==="fr"?"en":"fr";try{localStorage.setItem("pi-lang",to)}catch(_){}location.href=(to==="fr"?"/fr/":"/")+location.search};
+document.getElementById("lang").onclick=function(){var to=LANG==="fr"?"en":"fr";try{localStorage.setItem("pi-lang",to)}catch(_){}location.href=(to==="fr"?"/fr/":"/")+PZ.path+location.search};
 var stage=document.getElementById('stage'),board=document.getElementById('board');
 var tEl=document.getElementById('t'),nEl=document.getElementById('n');
 var W,H,cw,ch,tab,tray,pieces=[],placed=0,t0=null,elapsed=0,timer=null,done=false,zTop=10,sky;
@@ -249,7 +256,7 @@ function nf(n){try{return n.toLocaleString(LANG)}catch(_){return String(n)}}
 function renderGlobal(){var el=document.getElementById('global');if(!GL||GL.tries<1){el.hidden=true;return}el.textContent=T('global',nf(GL.tries),plural(GL.best),nf(GL.finished));el.hidden=false}
 function showGlobal(r){if(r&&typeof r.tries==='number'){GL=r;renderGlobal()}}
 function api(path,opt){try{fetch(path,opt).then(function(r){return r.ok?r.json():null}).then(showGlobal).catch(function(){})}catch(_){}}
-function track(o){api('/api/play',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(o)})}
+function track(o){api('/api/play',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({z:PZ.id},o))})}
 function toast(){
   var left=N-placed,m;
   if(placed===1)m=T('tFirst',left);else if(placed===10)m=T('tTen');else if(placed===N/2)m=T('tHalf');else if(left===10)m=T('tTenLeft');else if(left===1)m=T('tOne');else m=T('tp'+(mi++%5),left);
@@ -258,8 +265,8 @@ function toast(){
 }
 function saveStats(p){
   var s={tries:0,best:0};
-  try{s=JSON.parse(localStorage.getItem('pi-stats'))||s}catch(_){}
-  if(!counted){counted=true;s.tries++;if(p>s.best)s.best=p;try{localStorage.setItem('pi-stats',JSON.stringify(s))}catch(_){}}
+  try{s=JSON.parse(localStorage.getItem(SK))||s}catch(_){}
+  if(!counted){counted=true;s.tries++;if(p>s.best)s.best=p;try{localStorage.setItem(SK,JSON.stringify(s))}catch(_){}}
   document.getElementById('stats').textContent=T('stats',plural(s.best),T(s.tries>1?'triesN':'tries1',s.tries));
 }
 function tick(){elapsed=Math.floor((Date.now()-t0)/1000);tEl.textContent=fmt(elapsed)}
@@ -272,7 +279,7 @@ function finish(win){
   var p=placed,e=elapsed;saveStats(p);if(!sent){sent=true;track({a:'end',p:p,t:e})}
   shareText=win?T('winShare',fmt(e)):
     (p===0?T('zeroShare'):T('shareTxt',fmt(e),plural(p),N));
-  var base=SITE+(LANG==='fr'?'fr/':'');
+  var base=SITE+(LANG==='fr'?'fr/':'')+PZ.path;
   shareUrl=base+'?p='+p+'&t='+e+'&l='+LANG;
   drawCard(win,p,e);buildLinks();done=true;
   document.getElementById('modal').classList.add('on');
@@ -282,6 +289,7 @@ function buildLinks(){
   var u=encodeURIComponent(shareUrl),t=encodeURIComponent(shareText),both=encodeURIComponent(shareText+' '+shareUrl);
   var L=[['WhatsApp','https://wa.me/?text='+both],['Telegram','https://t.me/share/url?url='+u+'&text='+t],['X','https://twitter.com/intent/tweet?text='+t+'&url='+u],['Facebook','https://www.facebook.com/sharer/sharer.php?u='+u],['E-mail','mailto:?subject='+encodeURIComponent(T('title'))+'&body='+both]];
   if(/Android|iPhone|iPad/i.test(navigator.userAgent))L.splice(1,0,['Messenger','fb-messenger://share?link='+u]);
+  var oa=document.getElementById('other');oa.href=PZ.other[LANG];oa.textContent=T('also');
   var box=document.getElementById('links');box.textContent='';
   L.forEach(function(x){var a=document.createElement('a');a.textContent=x[0];a.href=x[1];if(x[1].indexOf('http')===0){a.target='_blank';a.rel='noopener'}box.appendChild(a)});
 }
@@ -293,7 +301,7 @@ function wrap(x,text,cx,y,maxW,lh){
 function drawCard(win,p,e){
   var c=document.createElement('canvas');c.width=1080;c.height=1350;var x=c.getContext('2d'),F="'Bricolage Grotesque',Arial,sans-serif",y;
   var g=x.createLinearGradient(0,0,0,1350);
-  if(win){g.addColorStop(0,'#14234d');g.addColorStop(.55,'#3b5fa8');g.addColorStop(1,'#f6b93b')}else{g.addColorStop(0,'#0050a0');g.addColorStop(1,'#3a85d0')}
+  if(win){g.addColorStop(0,PZ.w0);g.addColorStop(.55,PZ.w1);g.addColorStop(1,'#f6b93b')}else{g.addColorStop(0,PZ.c0);g.addColorStop(1,PZ.c1)}
   x.fillStyle=g;x.fillRect(0,0,1080,1350);
   if(win){var cols=['#ffd56b','#ffffff','#7fd0ff','#ff8fa3','#b6f0a8'];
     for(var i=0;i<140;i++){x.save();x.translate(Math.random()*1080,Math.random()*1350);x.rotate(Math.random()*6.3);x.fillStyle=cols[i%5];x.globalAlpha=.85;x.fillRect(-9,-4,18,8);x.restore()}}
@@ -355,8 +363,8 @@ try{
 
 var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(!t0&&!placed)build()},200)});
 applyLang();
-api("/api/stats");
-IMG=new Image();IMG.onload=build;IMG.src="/sky.jpg";
+api("/api/stats?z="+PZ.id);
+IMG=new Image();IMG.onload=build;IMG.src=PZ.img;
 })();
 </script>
 </body>

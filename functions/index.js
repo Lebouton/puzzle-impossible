@@ -1,2 +1,2 @@
-import { rewriteOG } from './_lib/og.js';
-export const onRequest = (context) => rewriteOG(context, false);
+import { rewriteOG, SKY } from './_lib/og.js';
+export const onRequest = (context) => rewriteOG(context, false, SKY);
